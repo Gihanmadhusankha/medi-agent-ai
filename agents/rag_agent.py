@@ -138,6 +138,49 @@ def analyze_health_risks(extracted_json_data, output_language="English"):
     
     return response.content
 
+def chat_with_report(extracted_json_data, user_question, chat_history):
+    
+    vectorstore = get_vector_store()
+    llm = get_llm()
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
+
+    findings_str = json.dumps(extracted_json_data, indent=2)
+
+    docs = retriever.invoke(user_question)
+    context = "\n".join([d.page_content for d in docs])
+
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", """You are a helpful and empathetic clinical AI assistant. 
+        You are having a conversation with a user about their medical lab report.
+        
+        Patient's Lab Results:
+        {findings}
+        
+        Relevant Medical Knowledge:
+        {context}
+        
+        Chat History:
+        {chat_history}
+        
+        CRITICAL INSTRUCTIONS:
+        - Answer the user's question clearly and politely in **Sinhala language** (සිංහලෙන්).
+        - Keep medical test names and units in English (e.g., Fasting Blood Sugar, mg/dL).
+        - Give practical, general lifestyle or dietary tips if asked, but NEVER give a formal medical diagnosis.
+        - Always remind them to consult their doctor for medical treatments (වෛද්‍යවරයකු හමුවී උපදෙස් ලබාගන්න).
+        """),
+        ("user", "{user_question}")
+    ])
+
+    chain = prompt | llm
+    response = chain.invoke({
+        "findings": findings_str,
+        "context": context,
+        "chat_history": chat_history,
+        "user_question": user_question
+    })
+    
+    return response.content
+
 # Test run
 if __name__ == "__main__":
     # This is a dummy JSON extracted from OCR in Phase 1.

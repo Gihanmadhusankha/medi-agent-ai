@@ -1,6 +1,6 @@
 # MediAgent AI
 
-MediAgent AI is a Streamlit-based medical report interpreter. It uses an OCR agent to extract lab values from PDF reports and a RAG agent to analyze the results against a small medical knowledge base.
+MediAgent AI is a Streamlit-based medical report interpreter. It uses an OCR agent to extract lab values from PDF reports and a RAG agent to analyze the results against a small medical knowledge base. After the report is analyzed, users can ask follow-up questions about the result directly in the app using the built-in chat option.
 
 ## Features
 
@@ -8,12 +8,15 @@ MediAgent AI is a Streamlit-based medical report interpreter. It uses an OCR age
 - Extract test results from the report
 - Compare findings with medical context
 - Show a final medical summary in the app
+- Ask follow-up questions about the analyzed report in a chat-style UI
+- Keep the report chat history in session state so you can continue the same conversation after reruns
+- Ask report questions without uploading the file again
 
 ## Project Structure
 
-- `app.py` - Streamlit UI entrypoint
+- `app.py` - Streamlit UI with report upload, analysis, and report Q&A chat
 - `agents/ocr_agent.py` - PDF text extraction and JSON parsing
-- `agents/rag_agent.py` - Medical risk analysis with retrieval-augmented generation
+- `agents/rag_agent.py` - Medical risk analysis and chat response generation
 - `agents/workflow.py` - LangGraph workflow that connects the agents
 - `core/config.py` - LLM and embeddings configuration
 - `data/` - Local data files such as sample PDFs
@@ -49,4 +52,4 @@ streamlit run app.py
 ## Notes
 
 - `vector_db/` is generated locally and is ignored by Git.
-- The current UI and report flow are set to English output.
+- The app keeps the analyzed report in session state so you can ask questions about the same report without uploading it again.
