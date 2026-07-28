@@ -2,7 +2,7 @@ import os
 import requests
 from dotenv import load_dotenv
 
-# .env එකෙන් API Key එක ගන්නවා
+
 load_dotenv()
 api_key = os.getenv("GROQ_API_KEY")
 
@@ -15,7 +15,7 @@ def get_groq_models():
 
     try:
         response = requests.get(url, headers=headers)
-        response.raise_for_status() # Errors තියෙනවද බලනවා
+        response.raise_for_status() 
         
         models_data = response.json()
         
