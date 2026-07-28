@@ -19,12 +19,12 @@ def get_groq_models():
         
         models_data = response.json()
         
-        print("✅ ඔයාගේ API Key එකට වැඩ කරන Models List එක:\n")
+    
         for model in models_data.get('data', []):
             print(f"- {model['id']}")
             
     except requests.exceptions.RequestException as e:
-        print(f"❌ Error එකක් ආවා: {e}")
+        
 
 if __name__ == "__main__":
     get_groq_models()
